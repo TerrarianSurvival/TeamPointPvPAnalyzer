@@ -83,6 +83,7 @@
     <Compile Include="Events\TeamWinEvent.cs" />
     <Compile Include="Events\VictimEvent.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="PvPPlayerStat.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Enums\EventType.cs" />
     <Compile Include="Events\DamageEvent.cs" />

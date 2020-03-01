@@ -37,7 +37,7 @@
             OldClass = args[1];
             CurrentClass = args[2];
 
-            LogInfoText = "Old: " + OldClass + " New: " + CurrentClass;
+            LogInfoText = Player.Name;
 
             return this;
         }

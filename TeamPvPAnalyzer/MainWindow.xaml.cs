@@ -190,50 +190,12 @@
                 BlueTeam.ItemsSource = blueTeam;
                 YellowTeam.ItemsSource = yellowTeam;
 
-                var blueClassTime = new Dictionary<string, TimeSpan>();
-                var yellowClassTime = new Dictionary<string, TimeSpan>();
-
                 int currentPointBlue = 0;
                 int currentPointYellow = 0;
 
                 foreach (var @event in pair.Value.InGameEvents)
                 {
-                    if (@event is ChangeClassEvent changeClass)
-                    {
-                        changeClass.DoEffect();
-
-                        if (changeClass.Player.Team == Enums.TeamID.Blue)
-                        {
-                            if (!blueClassTime.ContainsKey(changeClass.OldClass))
-                            {
-                                blueClassTime.Add(changeClass.OldClass, changeClass.Time - lastClassChangeTime[changeClass.Player]);
-                            }
-                            else
-                            {
-                                blueClassTime[changeClass.OldClass] += changeClass.Time - lastClassChangeTime[changeClass.Player];
-                            }
-
-                            lastClassChangeTime[changeClass.Player] = changeClass.Time;
-                        }
-                        else if (changeClass.Player.Team == Enums.TeamID.Yellow)
-                        {
-                            if (!yellowClassTime.ContainsKey(changeClass.OldClass))
-                            {
-                                yellowClassTime.Add(changeClass.OldClass, changeClass.Time - lastClassChangeTime[changeClass.Player]);
-                            }
-                            else
-                            {
-                                yellowClassTime[changeClass.OldClass] += changeClass.Time - lastClassChangeTime[changeClass.Player];
-                            }
-
-                            lastClassChangeTime[changeClass.Player] = changeClass.Time;
-                        }
-                    }
-                    else if (@event is ChangeTeamEvent changeTeamEvent)
-                    {
-                        changeTeamEvent.DoEffect();
-                    }
-                    else if (@event is GetPointEvent pointEvent)
+                    if (@event is GetPointEvent pointEvent)
                     {
                         if (pointEvent.Team == Enums.TeamID.Blue)
                         {
@@ -251,34 +213,53 @@
                 BluePoints.Text = currentPointBlue + " points";
                 YellowPoints.Text = currentPointYellow + " points";
 
-                foreach (var timePair in lastClassChangeTime)
+                var blueStat = new List<PvPPlayerStat>();
+                var yellowStat = new List<PvPPlayerStat>();
+
+                var blueClassTime = new Dictionary<string, TimeSpan>();
+                var yellowClassTime = new Dictionary<string, TimeSpan>();
+
+                foreach (var player in blueTeam)
                 {
-                    if (timePair.Key.Team == Enums.TeamID.Blue)
+                    var stat = new PvPPlayerStat(player, pair.Value.Start, pair.Value.End);
+                    blueStat.Add(stat);
+
+                    foreach (var timePair in stat.ClassTime)
                     {
-                        if (blueClassTime.ContainsKey(timePair.Key.Class))
+                        if (!blueClassTime.ContainsKey(timePair.Key))
                         {
-                            blueClassTime[timePair.Key.Class] += pair.Value.End - timePair.Value;
+                            blueClassTime.Add(timePair.Key, timePair.Value);
                         }
                         else
                         {
-                            blueClassTime.Add(timePair.Key.Class, pair.Value.End - timePair.Value);
+                            blueClassTime[timePair.Key] += timePair.Value;
                         }
                     }
-                    else if (timePair.Key.Team == Enums.TeamID.Yellow)
+                }
+
+                foreach (var player in yellowTeam)
+                {
+                    var stat = new PvPPlayerStat(player, pair.Value.Start, pair.Value.End);
+                    yellowStat.Add(stat);
+
+                    foreach (var timePair in stat.ClassTime)
                     {
-                        if (yellowClassTime.ContainsKey(timePair.Key.Class))
+                        if (!yellowClassTime.ContainsKey(timePair.Key))
                         {
-                            yellowClassTime[timePair.Key.Class] += pair.Value.End - timePair.Value;
+                            yellowClassTime.Add(timePair.Key, timePair.Value);
                         }
                         else
                         {
-                            yellowClassTime.Add(timePair.Key.Class, pair.Value.End - timePair.Value);
+                            yellowClassTime[timePair.Key] += timePair.Value;
                         }
                     }
                 }
 
                 BlueTeamClass.ItemsSource = blueClassTime;
                 YellowTeamClass.ItemsSource = yellowClassTime;
+
+                BlueTeamStat.ItemsSource = blueStat;
+                YellowTeamStat.ItemsSource = yellowStat;
             }
         }
     }
