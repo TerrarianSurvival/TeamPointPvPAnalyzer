@@ -1,0 +1,19 @@
+﻿[*.cs]
+
+# SA1629: Documentation text should end with a period
+dotnet_diagnostic.SA1629.severity = none
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1642: Constructor summary documentation should begin with standard text
+dotnet_diagnostic.SA1642.severity = none
+
+# SA1623: Property summary documentation should match accessors
+dotnet_diagnostic.SA1623.severity = none
+
+# CA1303: ローカライズされるパラメーターとしてリテラルを渡さない
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1308: 文字列を大文字に標準化します
+dotnet_diagnostic.CA1308.severity = none

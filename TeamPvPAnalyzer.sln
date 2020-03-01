@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamPvPAnalyzer", "TeamPvPAnalyzer\TeamPvPAnalyzer.csproj", "{8AEE4CAE-6735-44F4-BCAC-0204C23B2A3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48D02DE6-C879-4F45-8D84-7098B4E6A368}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AEE4CAE-6735-44F4-BCAC-0204C23B2A3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AEE4CAE-6735-44F4-BCAC-0204C23B2A3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AEE4CAE-6735-44F4-BCAC-0204C23B2A3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AEE4CAE-6735-44F4-BCAC-0204C23B2A3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6DAA8130-788D-4786-8CD4-9FB6C1640CE1}
+	EndGlobalSection
+EndGlobal
