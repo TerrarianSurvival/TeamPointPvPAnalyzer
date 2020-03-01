@@ -28,7 +28,7 @@
             EventPosX = pairEvent.VictimPositionX;
             EventPosY = pairEvent.VictimPositionY;
 
-            LogInfoText = "Damage: " + Damage + " Item: " + KillerItem;
+            LogInfoText = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
 
             if (HasKillerProjectile)
             {

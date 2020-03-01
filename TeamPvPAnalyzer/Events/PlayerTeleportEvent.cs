@@ -27,6 +27,8 @@
 
             Player = LogParser.GetPlayer(args[0]);
 
+            LogInfoText = Player.Name;
+
             return this;
         }
 

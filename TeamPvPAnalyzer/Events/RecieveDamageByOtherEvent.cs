@@ -47,7 +47,7 @@
 
             KillerOther = args[10];
 
-            LogInfoText = "Damage: " + Damage + " KillerOther: " + KillerOther;
+            LogInfoText = Player.Name + " Damage: " + Damage + " KillerOther: " + KillerOther;
 
             return this;
         }

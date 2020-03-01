@@ -37,6 +37,8 @@
             EventPosY = (int.Parse(args[2], NumberStyles.Integer, CultureInfo.InvariantCulture) - 1) * 16;
             Player = LogParser.GetPlayer(args[0]);
 
+            LogInfoText = Player.Name;
+
             return this;
         }
 

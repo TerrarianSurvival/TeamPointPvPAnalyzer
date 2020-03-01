@@ -42,7 +42,7 @@
 
             PairEvent = new KillPlayerEvent(Time, this);
 
-            LogInfoText = "Damage: " + Damage + " Item: " + KillerItem;
+            LogInfoText = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
 
             if (HasKillerProjectile)
             {

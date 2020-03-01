@@ -37,7 +37,7 @@
 
             Player = LogParser.GetPlayer(args[0]);
 
-            LogInfoText = "Old: " + OldTeam.ToString() + " New: " + NewTeam.ToString();
+            LogInfoText = Player.Name;
 
             return this;
         }
