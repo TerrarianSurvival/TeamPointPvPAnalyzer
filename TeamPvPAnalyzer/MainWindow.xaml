@@ -154,7 +154,7 @@
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">
 							<ContentPresenter Content="{Binding LogIcon}"></ContentPresenter>
-							<TextBlock Text="{Binding LogInfoText}"></TextBlock>
+							<TextBlock Text="{Binding LogInfoText}" Margin="5,0"></TextBlock>
 						</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>

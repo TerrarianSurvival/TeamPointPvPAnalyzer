@@ -62,6 +62,8 @@
                 Team = TeamID.Blue;
             }
 
+            LogInfoText = CurrentPoint.ToString(CultureInfo.InvariantCulture);
+
             return this;
         }
 
@@ -84,7 +86,7 @@
 
             var label = new Label
             {
-                Content = string.Format(CultureInfo.InvariantCulture, "{0:+##;-##}", CurrentPoint - OldPoint),
+                Content = string.Format(CultureInfo.InvariantCulture, "{0:+##;-##;+0}", CurrentPoint - OldPoint),
                 Foreground = textColor,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,

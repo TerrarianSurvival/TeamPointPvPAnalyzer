@@ -57,6 +57,9 @@
 
             Enums.StageData.StageName currentStage = Enums.StageData.StageName.Espeon;
 
+            int currentPointBlue = 0;
+            int currentPointYellow = 0;
+
             foreach (var @event in rawEvents)
             {
                 // プレイヤーに起きたイベントとして追加
@@ -69,6 +72,19 @@
                 {
                     teamID = teamWinEvent.WinnerTeam;
                 }
+                else if (@event is GetPointEvent pointEvent)
+                {
+                    if (pointEvent.Team == Enums.TeamID.Blue)
+                    {
+                        pointEvent.OldPoint = currentPointBlue;
+                        currentPointBlue = pointEvent.CurrentPoint;
+                    }
+                    else if (pointEvent.Team == Enums.TeamID.Yellow)
+                    {
+                        pointEvent.OldPoint = currentPointYellow;
+                        currentPointYellow = pointEvent.CurrentPoint;
+                    }
+                }
                 else if (@event is ChangeStageEvent changeStage)
                 {
                     changeStage.OldStage = currentStage;
@@ -78,6 +94,9 @@
                 {
                     start = @event.Time;
                     isGame = true;
+
+                    currentPointBlue = 0;
+                    currentPointYellow = 0;
                 }
                 else if (@event.Type == Enums.EventType.GameEnd)
                 {
@@ -87,7 +106,7 @@
                 if (end < @event.Time)
                 {
                     // ゲームエンドの時間を過ぎたのでイベントを追加してリセット(次のゲームへ)
-                    var game = new Game(currentStage, start, end, teamID);
+                    var game = new Game(currentStage, start, end, teamID, currentPointBlue, currentPointYellow);
                     game.AddRangePreGameStartEvents(preGameStartEvents);
                     game.AddRangeInGameEvent(gameEvents);
 
@@ -190,28 +209,8 @@
                 BlueTeam.ItemsSource = blueTeam;
                 YellowTeam.ItemsSource = yellowTeam;
 
-                int currentPointBlue = 0;
-                int currentPointYellow = 0;
-
-                foreach (var @event in pair.Value.InGameEvents)
-                {
-                    if (@event is GetPointEvent pointEvent)
-                    {
-                        if (pointEvent.Team == Enums.TeamID.Blue)
-                        {
-                            pointEvent.OldPoint = currentPointBlue;
-                            currentPointBlue = pointEvent.CurrentPoint;
-                        }
-                        else if (pointEvent.Team == Enums.TeamID.Yellow)
-                        {
-                            pointEvent.OldPoint = currentPointYellow;
-                            currentPointYellow = pointEvent.CurrentPoint;
-                        }
-                    }
-                }
-
-                BluePoints.Text = currentPointBlue + " points";
-                YellowPoints.Text = currentPointYellow + " points";
+                BluePoints.Text = pair.Value.BluePoint + " points";
+                YellowPoints.Text = pair.Value.YellowPoint + " points";
 
                 var blueStat = new List<PvPPlayerStat>();
                 var yellowStat = new List<PvPPlayerStat>();
@@ -255,8 +254,8 @@
                     }
                 }
 
-                BlueTeamClass.ItemsSource = blueClassTime;
-                YellowTeamClass.ItemsSource = yellowClassTime;
+                BlueTeamClass.ItemsSource = blueClassTime.OrderByDescending(x => x.Value);
+                YellowTeamClass.ItemsSource = yellowClassTime.OrderByDescending(x => x.Value);
 
                 BlueTeamStat.ItemsSource = blueStat;
                 YellowTeamStat.ItemsSource = yellowStat;

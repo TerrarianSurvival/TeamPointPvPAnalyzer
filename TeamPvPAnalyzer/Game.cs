@@ -12,12 +12,14 @@
 
         private List<ILogEvent> preGameStartEvents = new List<ILogEvent>();
 
-        public Game(StageData.StageName stageName, DateTime start, DateTime end, TeamID winnerTeam)
+        public Game(StageData.StageName stageName, DateTime start, DateTime end, TeamID winnerTeam, int bluePoint, int yellowPoint)
         {
             Stage = stageName;
             Start = start;
             End = end;
             WinnerTeam = winnerTeam;
+            BluePoint = bluePoint;
+            YellowPoint = yellowPoint;
         }
 
         public StageData.StageName Stage { get; }
@@ -27,6 +29,10 @@
         public DateTime End { get; }
 
         public TeamID WinnerTeam { get; }
+
+        public int BluePoint { get; }
+
+        public int YellowPoint { get; }
 
         public ReadOnlyCollection<ILogEvent> InGameEvents
         {
