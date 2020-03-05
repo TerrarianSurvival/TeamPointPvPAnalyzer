@@ -26,6 +26,8 @@
             ParseFromArguments(args);
         }
 
+        public string LogInfoText { get { return Player.Name; } }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             if (args.Length != 3)
@@ -36,8 +38,6 @@
             EventPosX = int.Parse(args[1], NumberStyles.Integer, CultureInfo.InvariantCulture) * 16;
             EventPosY = (int.Parse(args[2], NumberStyles.Integer, CultureInfo.InvariantCulture) - 1) * 16;
             Player = LogParser.GetPlayer(args[0]);
-
-            LogInfoText = Player.Name;
 
             return this;
         }

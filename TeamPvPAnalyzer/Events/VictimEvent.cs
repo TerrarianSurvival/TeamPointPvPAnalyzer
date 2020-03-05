@@ -9,6 +9,20 @@
         {
         }
 
+        public string LogInfoText
+        {
+            get
+            {
+                var text = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
+                if (HasKillerProjectile)
+                {
+                    text += " Projectile: " + KillerProjectile;
+                }
+
+                return text;
+            }
+        }
+
         public VictimEvent(DateTime time, Enums.EventType type, KillerEvent pairEvent)
             : base(time, type)
         {
@@ -27,13 +41,6 @@
             Player = pairEvent.VictimPlayer;
             EventPosX = pairEvent.VictimPositionX;
             EventPosY = pairEvent.VictimPositionY;
-
-            LogInfoText = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
-
-            if (HasKillerProjectile)
-            {
-                LogInfoText += " Projectile: " + KillerProjectile;
-            }
         }
 
         public KillerEvent PairEvent { get; protected set; }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using TeamPvPAnalyzer.Enums;
     using TeamPvPAnalyzer.Events;
@@ -9,21 +10,38 @@
     /// <summary>
     /// プレイヤークラス
     /// </summary>
-    public class PvPPlayer
+    public class PvPPlayer : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string name;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="name">プレイヤー名</param>
         public PvPPlayer(string name)
         {
-            Name = name;
+            this.name = name;
         }
 
         /// <summary>
         /// プレイヤー名
         /// </summary>
-        public string Name { get; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+            }
+        }
 
         /// <summary>
         /// クラスの名前

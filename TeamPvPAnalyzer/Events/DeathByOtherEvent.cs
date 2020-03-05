@@ -20,6 +20,8 @@
 
         public string KillerOther { get; protected set; }
 
+        public string LogInfoText { get { return Player.Name + " Damage: " + Damage + " KillerOther: " + KillerOther; } }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             // Format: DeadPlayer, KillerPlayer, Damage, DeadPlayerX, DeadPlayerY, KillerPlayerX, KillerPlayerY, KillerItem, KillerProj, KillerNPC, KillerOther
@@ -35,8 +37,6 @@
             Damage = int.Parse(args[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
 
             KillerOther = args[10];
-
-            LogInfoText = Player.Name + " Damage: " + Damage + " KillerOther: " + KillerOther;
 
             return this;
         }

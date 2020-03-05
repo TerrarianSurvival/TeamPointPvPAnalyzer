@@ -29,6 +29,8 @@
 
         public string CurrentClass { get; protected set; }
 
+        public string LogInfoText { get { return Player.Name; } }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             EventPosX = float.Parse(args[3], NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -36,8 +38,6 @@
             Player = LogParser.GetPlayer(args[0]);
             OldClass = args[1];
             CurrentClass = args[2];
-
-            LogInfoText = Player.Name;
 
             return this;
         }

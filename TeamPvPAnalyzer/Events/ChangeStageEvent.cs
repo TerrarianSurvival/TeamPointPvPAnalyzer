@@ -9,7 +9,7 @@
     public class ChangeStageEvent : GameEvent
     {
         public ChangeStageEvent(DateTime time)
-    : base(time, EventType.ChangeStage)
+            : base(time, EventType.ChangeStage)
         {
         }
 

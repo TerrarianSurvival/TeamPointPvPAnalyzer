@@ -22,13 +22,6 @@
             Player = pairEvent.KillerPlayer;
             EventPosX = pairEvent.KillerPositionX;
             EventPosY = pairEvent.KillerPositionY;
-
-            LogInfoText = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
-
-            if (HasKillerProjectile)
-            {
-                LogInfoText += " Projectile: " + KillerProjectile;
-            }
         }
 
         public VictimEvent PairEvent { get; protected set; }
@@ -44,5 +37,19 @@
         public string KillerProjectile { get; protected set; }
 
         public string KillerItem { get; protected set; }
+
+        public string LogInfoText
+        {
+            get
+            {
+                var text = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
+                if (HasKillerProjectile)
+                {
+                    text += " Projectile: " + KillerProjectile;
+                }
+
+                return text;
+            }
+        }
     }
 }

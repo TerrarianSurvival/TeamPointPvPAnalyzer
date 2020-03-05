@@ -33,6 +33,8 @@
 
         public int SpawnCount { get; } = 0;
 
+        public ObservableCollection<Tuple<string, string>> StatList { get; } = new ObservableCollection<Tuple<string, string>>();
+
         public PvPPlayerStat(PvPPlayer player, DateTime startTime, DateTime endTime)
         {
             Player = player ?? throw new ArgumentNullException(nameof(player));

@@ -19,6 +19,20 @@
             ParseFromArguments(args);
         }
 
+        public string LogInfoText
+        {
+            get
+            {
+                var text = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
+                if (HasKillerProjectile)
+                {
+                    text += " Projectile: " + KillerProjectile;
+                }
+
+                return text;
+            }
+        }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             // Format: DeadPlayer, KillerPlayer, Damage, DeadPlayerX, DeadPlayerY, KillerPlayerX, KillerPlayerY, KillerItem, KillerProj, KillerNPC, KillerOther
@@ -43,13 +57,6 @@
             HasKillerProjectile = !string.IsNullOrEmpty(KillerProjectile);
 
             PairEvent = new DealDamageToPlayerEvent(Time, this);
-
-            LogInfoText = Player.Name + " Damage: " + Damage + " Item: " + KillerItem;
-
-            if (HasKillerProjectile)
-            {
-                LogInfoText += " Projectile: " + KillerProjectile;
-            }
 
             return this;
         }

@@ -33,8 +33,22 @@
                 {
                     var newPlayer = new PvPPlayer(name);
                     PlayerDict.Add(name, newPlayer);
+                    newPlayer.PropertyChanged += Player_PropertyChanged;
+
                     return newPlayer;
                 }
+            }
+        }
+
+        private static void Player_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var player = (PvPPlayer)sender;
+            switch (e.PropertyName)
+            {
+                case "Name":
+                    PlayerDict.Remove(PlayerDict.FirstOrDefault(x => ReferenceEquals(x.Value, player)).Key);
+                    PlayerDict.Add(player.Name, player);
+                    break;
             }
         }
 

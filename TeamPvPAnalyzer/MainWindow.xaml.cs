@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -11,11 +12,38 @@
     using TeamPvPAnalyzer.Events;
 
     /// <summary>
+    /// 統計情報の集計結果を取得する関数
+    /// </summary>
+    /// <param name="stat">解析済み情報</param>
+    /// <returns>集計結果</returns>
+    public delegate string GetStatValue(PvPPlayerStat stat);
+
+    /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Dictionary<string, GetStatValue> StatFunctions = new Dictionary<string, GetStatValue>()
+        {
+            ["Damage"] = x => { return x.TotalDamage.ToString(CultureInfo.InvariantCulture); },
+            ["Damage Times"] = x => { return x.DamageCount.ToString(CultureInfo.InvariantCulture); },
+            ["Recieve Damage"] = x => { return x.TotalRecieveDamage.ToString(CultureInfo.InvariantCulture); },
+            ["Recieve Damage Times"] = x => { return x.RecieveDamageCount.ToString(CultureInfo.InvariantCulture); },
+            ["Death"] = x => { return x.DeathCount.ToString(CultureInfo.InvariantCulture); },
+            ["Kill"] = x => { return x.KillCount.ToString(CultureInfo.InvariantCulture); },
+            ["Teleport"] = x => { return x.TeleportCount.ToString(CultureInfo.InvariantCulture); },
+            ["Spawn"] = x => { return x.SpawnCount.ToString(CultureInfo.InvariantCulture); },
+        };
+
         private readonly Dictionary<string, Game> games = new Dictionary<string, Game>();
+
+        private List<ILogEvent> logAllEvents;
+
+        private ObservableCollection<ILogEvent> filteredEvents = new ObservableCollection<ILogEvent>();
+
+        private Dictionary<PvPPlayer, bool> playerFilters = new Dictionary<PvPPlayer, bool>();
+
+        private bool aggregateApply = false;
 
         public MainWindow()
         {
@@ -178,7 +206,10 @@
         {
             if (e.AddedItems[0] is KeyValuePair<string, Game> pair)
             {
-                LogListBox.ItemsSource = pair.Value.AllEvents;
+                logAllEvents = new List<ILogEvent>(pair.Value.AllEvents);
+                LogListBox.ItemsSource = filteredEvents;
+
+                playerFilters.Clear();
 
                 GameLengthText.Text = "Game Length: " + (pair.Value.End - pair.Value.Start).ToString("c", CultureInfo.InvariantCulture);
                 WinnerTeam.Text = "Winner: " + pair.Value.WinnerTeam.ToString();
@@ -204,6 +235,8 @@
                     }
 
                     lastClassChangeTime.Add(playerDictPair.Value, pair.Value.Start);
+
+                    playerFilters.Add(playerDictPair.Value, false);
                 }
 
                 BlueTeam.ItemsSource = blueTeam;
@@ -259,6 +292,175 @@
 
                 BlueTeamStat.ItemsSource = blueStat;
                 YellowTeamStat.ItemsSource = yellowStat;
+            }
+        }
+
+        private void ApplyFilters()
+        {
+            if (aggregateApply)
+            {
+                return;
+            }
+
+            filteredEvents.Clear();
+
+            foreach (var @event in logAllEvents)
+            {
+                if (@event is PlayerEvent playerEvent)
+                {
+                    if (playerFilters.TryGetValue(playerEvent.Player, out bool flag) && flag)
+                    {
+                        filteredEvents.Add(@event);
+                    }
+                }
+                else
+                {
+                    filteredEvents.Add(@event);
+                }
+            }
+        }
+
+        private void BlueTeamCheckAll_Clicked(object sender, RoutedEventArgs e)
+        {
+            aggregateApply = true;
+
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                foreach (var item in BlueTeamStat.Items)
+                {
+                    if (BlueTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        element.IsSelected = true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in BlueTeamStat.Items)
+                {
+                    if (BlueTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        element.IsSelected = false;
+                    }
+                }
+            }
+
+            aggregateApply = false;
+            ApplyFilters();
+        }
+
+        private void YellowTeamCheckAll_Clicked(object sender, RoutedEventArgs e)
+        {
+            aggregateApply = true;
+
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                foreach (var item in YellowTeamStat.Items)
+                {
+                    if (YellowTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        element.IsSelected = true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in YellowTeamStat.Items)
+                {
+                    if (YellowTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        element.IsSelected = false;
+                    }
+                }
+            }
+
+            aggregateApply = false;
+            ApplyFilters();
+        }
+
+        private void Player_Checked(object sender, RoutedEventArgs e)
+        {
+            var playerStat = ((StackPanel)((CheckBox)sender).Parent).DataContext as PvPPlayerStat;
+            playerFilters[playerStat.Player] = true;
+
+            ApplyFilters();
+        }
+
+        private void Player_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var playerStat = ((StackPanel)((CheckBox)sender).Parent).DataContext as PvPPlayerStat;
+            playerFilters[playerStat.Player] = false;
+
+            ApplyFilters();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var items = StatFunctions.Keys;
+
+            BlueTeamStatComboBox.ItemsSource = items;
+            YellowTeamStatComboBox.ItemsSource = items;
+        }
+
+        private void BlueTeamStatCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox box && box.Parent is DockPanel panel && BlueTeamStat.ItemsSource != null)
+            {
+                foreach (var child in panel.Children)
+                {
+                    if (child is TextBlock text)
+                    {
+                        string name = text.Text;
+                        foreach (var source in BlueTeamStat.ItemsSource)
+                        {
+                            if (source is PvPPlayerStat stat)
+                            {
+                                if (box.IsChecked == true)
+                                {
+                                    if (!stat.StatList.Where(x => x.Item1 == name + ": ").Any())
+                                    {
+                                        stat.StatList.Add(new Tuple<string, string>(name + ": ", StatFunctions[name](stat)));
+                                    }
+                                }
+                                else
+                                {
+                                    stat.StatList.Remove(stat.StatList.Where(x => x.Item1 == name + ": ").FirstOrDefault());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void YellowTeamStatCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox box && box.Parent is DockPanel panel && YellowTeamStat.ItemsSource != null)
+            {
+                foreach (var child in panel.Children)
+                {
+                    if (child is TextBlock text)
+                    {
+                        string name = text.Text;
+                        foreach (var source in YellowTeamStat.ItemsSource)
+                        {
+                            if (source is PvPPlayerStat stat)
+                            {
+                                if (box.IsChecked == true)
+                                {
+                                    if (!stat.StatList.Where(x => x.Item1 == name + ": ").Any())
+                                    {
+                                        stat.StatList.Add(new Tuple<string, string>(name + ": ", StatFunctions[name](stat)));
+                                    }
+                                }
+                                else
+                                {
+                                    stat.StatList.Remove(stat.StatList.Where(x => x.Item1 == name + ": ").FirstOrDefault());
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

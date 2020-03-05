@@ -20,14 +20,14 @@
             ParseFromArguments(args);
         }
 
+        public string LogInfoText { get { return Player.Name; } }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             EventPosX = float.Parse(args[1], NumberStyles.Float, CultureInfo.InvariantCulture);
             EventPosY = float.Parse(args[2], NumberStyles.Float, CultureInfo.InvariantCulture);
 
             Player = LogParser.GetPlayer(args[0]);
-
-            LogInfoText = Player.Name;
 
             return this;
         }

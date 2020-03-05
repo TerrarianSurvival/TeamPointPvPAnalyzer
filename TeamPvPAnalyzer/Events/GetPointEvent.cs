@@ -38,6 +38,8 @@
         /// </summary>
         public int CurrentPoint { get; protected set; }
 
+        public string LogInfoText { get { return CurrentPoint.ToString(CultureInfo.InvariantCulture); } }
+
         public override ILogEvent ParseFromArguments(string[] args)
         {
             // int who = int.Parse(args[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
@@ -61,8 +63,6 @@
             {
                 Team = TeamID.Blue;
             }
-
-            LogInfoText = CurrentPoint.ToString(CultureInfo.InvariantCulture);
 
             return this;
         }
