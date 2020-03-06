@@ -381,7 +381,10 @@
         private void Player_Checked(object sender, RoutedEventArgs e)
         {
             var playerStat = ((StackPanel)((CheckBox)sender).Parent).DataContext as PvPPlayerStat;
-            playerFilters[playerStat.Player] = true;
+            if (playerStat != null)
+            {
+                playerFilters[playerStat.Player] = true;
+            }
 
             ApplyFilters();
         }
@@ -389,7 +392,10 @@
         private void Player_Unchecked(object sender, RoutedEventArgs e)
         {
             var playerStat = ((StackPanel)((CheckBox)sender).Parent).DataContext as PvPPlayerStat;
-            playerFilters[playerStat.Player] = false;
+            if (playerStat != null)
+            {
+                playerFilters[playerStat.Player] = false;
+            }
 
             ApplyFilters();
         }
