@@ -3,23 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TeamPvPAnalyzer"
+        xmlns:timeline="clr-namespace:TeamPvPAnalyzer.Timeline"
         mc:Ignorable="d"
-        Title="PvP Log Analyzer" Height="800" Width="1600"
+        Title="PvP Log Analyzer" Height="1200" Width="1600"
 		Loaded="Window_Loaded">
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition></ColumnDefinition>
-			<ColumnDefinition Width="400"></ColumnDefinition>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="400"/>
 		</Grid.ColumnDefinitions>
 
 		<Grid.RowDefinitions>
-			<RowDefinition></RowDefinition>
-			<RowDefinition Height="400"></RowDefinition>
+			<RowDefinition/>
+			<RowDefinition Height="200"/>
+			<RowDefinition Height="400"/>
 		</Grid.RowDefinitions>
 
 		<Grid>
-			<Image x:Name="MapBackground" Stretch="Uniform"></Image>
+			<Image x:Name="MapBackground" Stretch="Uniform"/>
 			<Canvas x:Name="MapCanvas" 
 					Height="{Binding ElementName=MapBackground, Path=ActualHeight}"
 				    Width="{Binding ElementName=MapBackground, Path=ActualWidth}">
@@ -250,5 +251,7 @@
 				</ListView>
 			</Grid>
 		</DockPanel>
+
+		<timeline:Timeline x:Name="TimeLine" Grid.ColumnSpan="2" Grid.Row="2"/>
 	</Grid>
 </Window>

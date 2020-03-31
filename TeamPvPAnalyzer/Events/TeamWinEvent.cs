@@ -38,9 +38,9 @@
 
         public override void CreateIcons()
         {
-            var color = Utils.GetTeamColor(WinnerTeam);
+            var color = IconUtils.GetTeamColor(WinnerTeam);
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
 
             SolidColorBrush textColor = Brushes.Black;
 

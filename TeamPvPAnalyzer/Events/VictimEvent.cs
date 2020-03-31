@@ -9,7 +9,7 @@
         {
         }
 
-        public string LogInfoText
+        public new string LogInfoText
         {
             get
             {

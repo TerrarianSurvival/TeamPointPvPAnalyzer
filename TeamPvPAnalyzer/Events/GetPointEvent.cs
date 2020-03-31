@@ -38,7 +38,7 @@
         /// </summary>
         public int CurrentPoint { get; protected set; }
 
-        public string LogInfoText { get { return CurrentPoint.ToString(CultureInfo.InvariantCulture); } }
+        public new string LogInfoText { get { return CurrentPoint.ToString(CultureInfo.InvariantCulture); } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -69,9 +69,9 @@
 
         public override void CreateIcons()
         {
-            var color = Utils.GetTeamColor(Team);
+            var color = IconUtils.GetTeamColor(Team);
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
 
             SolidColorBrush textColor = Brushes.Black;
 

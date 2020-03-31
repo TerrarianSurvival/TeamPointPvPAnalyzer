@@ -38,7 +38,7 @@
 
         public string KillerItem { get; protected set; }
 
-        public string LogInfoText
+        public new string LogInfoText
         {
             get
             {

@@ -141,7 +141,7 @@
 
             MostUsedClass = classTime.OrderByDescending(x => x.Value).First().Key;
 
-            IconSource = Utils.GetImageSource(MostUsedClass.ToLowerInvariant());
+            IconSource = IconUtils.GetImageSource(MostUsedClass.ToLowerInvariant());
         }
 
         public PvPPlayer Player { get; }

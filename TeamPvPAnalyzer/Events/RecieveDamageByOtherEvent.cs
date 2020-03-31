@@ -31,7 +31,7 @@
         /// </summary>
         public string KillerOther { get; protected set; }
 
-        public string LogInfoText { get { return Player.Name + " Damage: " + Damage + " KillerOther: " + KillerOther; } }
+        public new string LogInfoText { get { return Player.Name + " Damage: " + Damage + " KillerOther: " + KillerOther; } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -55,12 +55,12 @@
         public override void CreateIcons()
         {
 
-            var player_source = Utils.GetImageSource(Player.Class.ToLowerInvariant());
-            var death_source = Utils.GetImageSource("icon_shield");
+            var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
+            var death_source = IconUtils.GetImageSource("icon_shield");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, death_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, death_source);
 
             var player_image = new Image
             {
@@ -80,7 +80,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(death_image);
 

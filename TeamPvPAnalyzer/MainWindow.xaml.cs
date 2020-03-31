@@ -10,6 +10,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using TeamPvPAnalyzer.Events;
+    using TeamPvPAnalyzer.Timeline;
 
     /// <summary>
     /// 統計情報の集計結果を取得する関数
@@ -214,7 +215,7 @@
                 GameLengthText.Text = "Game Length: " + (pair.Value.End - pair.Value.Start).ToString("c", CultureInfo.InvariantCulture);
                 WinnerTeam.Text = "Winner: " + pair.Value.WinnerTeam.ToString();
 
-                MapBackground.Source = Utils.GetImageSource(pair.Value.Stage.ToString());
+                MapBackground.Source = IconUtils.GetImageSource(pair.Value.Stage.ToString());
 
                 var blueTeam = new List<PvPPlayer>();
                 var yellowTeam = new List<PvPPlayer>();
@@ -292,6 +293,36 @@
 
                 BlueTeamStat.ItemsSource = blueStat;
                 YellowTeamStat.ItemsSource = yellowStat;
+
+                var stageData = Utils.StageDatas[((KeyValuePair<string, Game>)GameSelectBox.SelectedItem).Value.Stage];
+
+                double canvasHeight = MapCanvas.Height;
+                double canvasWidth = MapCanvas.Width;
+
+                var elements = new List<TimelineElement>();
+                foreach (var logEvent in logAllEvents)
+                {
+                    var point = new Point(-1, -1);
+                    if (logEvent is PositionalEvent positionalEvent)
+                    {
+                        float x = positionalEvent.EventPosX + 10;
+                        float y = positionalEvent.EventPosY + 21;
+                        if (stageData.IsInRange(x, y))
+                        {
+                            float fixedX = (x - (stageData.X * 16)) / (stageData.Width * 16);
+                            float fixedY = (y - (stageData.Y * 16)) / (stageData.Height * 16);
+
+                            point = new Point(fixedX, fixedY);
+                        }
+                    }
+
+                    elements.Add(new TimelineElement(logEvent, point));
+                }
+
+                if (elements.Count > 0)
+                {
+                    TimeLine.SetDatas(elements, MapCanvas);
+                }
             }
         }
 

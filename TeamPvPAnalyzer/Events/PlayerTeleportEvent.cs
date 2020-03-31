@@ -20,7 +20,7 @@
             ParseFromArguments(args);
         }
 
-        public string LogInfoText { get { return Player.Name; } }
+        public new string LogInfoText { get { return Player.Name; } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -34,12 +34,12 @@
 
         public override void CreateIcons()
         {
-            var player_source = Utils.GetImageSource(Player.Class);
-            var teleport_source = Utils.GetImageSource("icon_teleport");
+            var player_source = IconUtils.GetImageSource(Player.Class);
+            var teleport_source = IconUtils.GetImageSource("icon_teleport");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, player_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, player_source);
 
             var player_image = new Image
             {
@@ -59,7 +59,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(teleport_image);
 

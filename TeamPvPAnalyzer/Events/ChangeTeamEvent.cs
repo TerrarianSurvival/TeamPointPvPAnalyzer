@@ -27,7 +27,7 @@
 
         public TeamID NewTeam { get; protected set; }
 
-        public string LogInfoText { get { return Player.Name; } }
+        public new string LogInfoText { get { return Player.Name; } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -54,20 +54,18 @@
 
         public override void CreateIcons()
         {
-            var arrow_source = Utils.GetImageSource("icon_arrow");
+            var arrow_source = IconUtils.GetImageSource("icon_arrow");
 
-            var color = Utils.GetTeamColor(NewTeam);
+            var color = IconUtils.GetTeamColor(NewTeam);
 
-            var new_team_icon = Utils.CreateTeamIcon(NewTeam);
+            MapIcon = IconUtils.CreateMapTeamIcon(NewTeam, Player);
 
-            MapIcon = Utils.CreateMapIcon(color, new_team_icon);
-
-            new_team_icon = Utils.CreateTeamIcon(NewTeam);
+            var new_team_icon = IconUtils.CreateTeamIcon(NewTeam);
             new_team_icon.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
             new_team_icon.Margin = new System.Windows.Thickness(2);
             new_team_icon.Width = 26;
 
-            var old_team_icon = Utils.CreateTeamIcon(OldTeam);
+            var old_team_icon = IconUtils.CreateTeamIcon(OldTeam);
             old_team_icon.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             old_team_icon.Margin = new System.Windows.Thickness(2);
             old_team_icon.Width = 26;
@@ -81,7 +79,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(old_team_icon);
             grid.Children.Add(arrow_image);
             grid.Children.Add(new_team_icon);

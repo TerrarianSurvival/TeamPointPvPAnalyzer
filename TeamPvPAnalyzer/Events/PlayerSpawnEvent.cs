@@ -26,7 +26,7 @@
             ParseFromArguments(args);
         }
 
-        public string LogInfoText { get { return Player.Name; } }
+        public new string LogInfoText { get { return Player.Name; } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -44,21 +44,10 @@
 
         public override void CreateIcons()
         {
-            var player_source = Utils.GetImageSource(Player.Class.ToLowerInvariant());
-            var spawn_source = Utils.GetImageSource("icon_respawn");
+            var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
+            var spawn_source = IconUtils.GetImageSource("icon_respawn");
 
-            var color = Utils.GetTeamColor(Player.Team);
-
-            MapIcon = Utils.CreateMapIcon(color, player_source);
-
-            var player_image = new Image
-            {
-                Source = player_source,
-                Stretch = Stretch.Uniform,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-                Margin = new System.Windows.Thickness(2),
-                Width = 26,
-            };
+            var color = IconUtils.GetTeamColor(Player.Team);
 
             var spawn_image = new Image
             {
@@ -69,7 +58,27 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            MapIcon = IconUtils.CreateMapTwoImageIcon(color, Player, spawn_image);
+
+            spawn_image = new Image
+            {
+                Source = spawn_source,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                Margin = new System.Windows.Thickness(2),
+                Width = 26,
+            };
+
+            var player_image = new Image
+            {
+                Source = player_source,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                Margin = new System.Windows.Thickness(2),
+                Width = 26,
+            };
+
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(spawn_image);
 

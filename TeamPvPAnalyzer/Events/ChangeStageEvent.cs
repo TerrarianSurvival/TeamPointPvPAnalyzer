@@ -49,7 +49,7 @@
 
         public override void CreateIcons()
         {
-            var grid = Utils.CreateBaseLogIcon(Brushes.Black);
+            var grid = IconUtils.CreateBaseLogIcon(Brushes.Black);
 
             var label = new Label
             {

@@ -37,7 +37,7 @@
         /// </summary>
         public string LogInfoText { get; protected set; }
 
-        public System.Windows.UIElement LogIcon { get; protected set; }
+        public System.Windows.FrameworkElement LogIcon { get; protected set; }
 
         public System.Windows.FrameworkElement MapIcon { get; protected set; }
 
@@ -53,7 +53,7 @@
 
         public virtual void CreateIcons()
         {
-            var grid = Utils.CreateBaseLogIcon(Brushes.Black);
+            var grid = IconUtils.CreateBaseLogIcon(Brushes.Black);
 
             var label = new Label
             {

@@ -22,7 +22,7 @@ namespace TeamPvPAnalyzer.Events
         /// </summary>
         string LogInfoText { get; }
 
-        UIElement LogIcon { get; }
+        FrameworkElement LogIcon { get; }
 
         FrameworkElement MapIcon { get; }
 

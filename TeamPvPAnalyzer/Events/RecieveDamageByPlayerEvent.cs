@@ -19,7 +19,7 @@
             ParseFromArguments(args);
         }
 
-        public string LogInfoText
+        public new string LogInfoText
         {
             get
             {
@@ -63,13 +63,13 @@
 
         public override void CreateIcons()
         {
-            var player_source = Utils.GetImageSource(Player.Class.ToLowerInvariant());
-            var killer_source = Utils.GetImageSource(KillerPlayer.Class.ToLowerInvariant());
-            var sword_source = Utils.GetImageSource("icon_shield");
+            var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
+            var killer_source = IconUtils.GetImageSource(KillerPlayer.Class.ToLowerInvariant());
+            var sword_source = IconUtils.GetImageSource("icon_shield");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, player_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, player_source);
 
             var player_image = new Image
             {
@@ -98,7 +98,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(death_image);
             grid.Children.Add(killer_image);

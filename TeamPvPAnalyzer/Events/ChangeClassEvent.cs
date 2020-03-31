@@ -8,6 +8,9 @@
     using System.Windows.Media.Effects;
     using TeamPvPAnalyzer.Enums;
 
+    /// <summary>
+    /// クラス変更イベント
+    /// </summary>
     public class ChangeClassEvent : PlayerEvent
     {
         /// <summary>
@@ -29,7 +32,7 @@
 
         public string CurrentClass { get; protected set; }
 
-        public string LogInfoText { get { return Player.Name; } }
+        public new string LogInfoText { get { return Player.Name; } }
 
         public override ILogEvent ParseFromArguments(string[] args)
         {
@@ -54,13 +57,13 @@
 
         public override void CreateIcons()
         {
-            var current_source = Utils.GetImageSource(CurrentClass.ToLowerInvariant());
-            var old_source = Utils.GetImageSource(OldClass.ToLowerInvariant());
-            var arrow_source = Utils.GetImageSource("icon_arrow");
+            var current_source = IconUtils.GetImageSource(CurrentClass.ToLowerInvariant());
+            var old_source = IconUtils.GetImageSource(OldClass.ToLowerInvariant());
+            var arrow_source = IconUtils.GetImageSource("icon_arrow");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, current_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, current_source);
 
             var old_image = new Image
             {
@@ -89,7 +92,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(current_image);
             grid.Children.Add(arrow_image);
             grid.Children.Add(old_image);

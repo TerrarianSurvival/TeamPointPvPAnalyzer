@@ -5,6 +5,9 @@
     using System.Windows.Controls;
     using System.Windows.Media;
 
+    /// <summary>
+    /// 他のプレイヤーにダメージを与えたイベント
+    /// </summary>
     public class DealDamageToPlayerEvent : KillerEvent
     {
         public DealDamageToPlayerEvent(DateTime time, RecieveDamageByPlayerEvent pairEvent)
@@ -14,13 +17,13 @@
 
         public override void CreateIcons()
         {
-            var player_source = Utils.GetImageSource(Player.Class.ToLowerInvariant());
-            var victim_source = Utils.GetImageSource(VictimPlayer.Class.ToLowerInvariant());
-            var sword_source = Utils.GetImageSource("icon_sword");
+            var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
+            var victim_source = IconUtils.GetImageSource(VictimPlayer.Class.ToLowerInvariant());
+            var sword_source = IconUtils.GetImageSource("icon_sword");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, player_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, player_source);
 
             var player_image = new Image
             {
@@ -49,7 +52,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(sword_image);
             grid.Children.Add(victim_image);

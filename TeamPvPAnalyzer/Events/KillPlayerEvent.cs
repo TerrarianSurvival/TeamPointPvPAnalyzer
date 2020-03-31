@@ -17,13 +17,13 @@
 
         public override void CreateIcons()
         {
-            var player_source = Utils.GetImageSource(Player.Class.ToLowerInvariant());
-            var victim_source = Utils.GetImageSource(VictimPlayer.Class.ToLowerInvariant());
-            var kill_source = Utils.GetImageSource("icon_kill");
+            var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
+            var victim_source = IconUtils.GetImageSource(VictimPlayer.Class.ToLowerInvariant());
+            var kill_source = IconUtils.GetImageSource("icon_kill");
 
-            var color = Utils.GetTeamColor(Player.Team);
+            var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = Utils.CreateMapIcon(color, player_source);
+            MapIcon = IconUtils.CreateMapSingleImageIcon(color, player_source);
 
             var player_image = new Image
             {
@@ -52,7 +52,7 @@
                 Width = 26,
             };
 
-            var grid = Utils.CreateBaseLogIcon(color);
+            var grid = IconUtils.CreateBaseLogIcon(color);
             grid.Children.Add(player_image);
             grid.Children.Add(kill_image);
             grid.Children.Add(victim_image);
