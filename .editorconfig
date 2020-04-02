@@ -17,3 +17,6 @@ dotnet_diagnostic.CA1303.severity = none
 
 # CA1308: 文字列を大文字に標準化します
 dotnet_diagnostic.CA1308.severity = none
+
+# SA1118: Parameter should not span multiple lines
+dotnet_diagnostic.SA1118.severity = none

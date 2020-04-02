@@ -58,7 +58,7 @@
 
             var color = IconUtils.GetTeamColor(NewTeam);
 
-            MapIcon = IconUtils.CreateMapTeamIcon(NewTeam, Player);
+            MapIcon = IconUtils.CreateMapIcon(Player, IconUtils.CreateTeamIcon(NewTeam));
 
             var new_team_icon = IconUtils.CreateTeamIcon(NewTeam);
             new_team_icon.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;

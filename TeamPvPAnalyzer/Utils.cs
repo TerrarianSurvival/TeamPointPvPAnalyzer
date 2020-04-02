@@ -32,7 +32,8 @@
                 throw new ArgumentException("logOneLine must not null or empty.");
             }
 
-            string timeText = logOneLine.Substring(0, 19);
+            string logFormat = "yyyy-MM-dd HH:mm:ss.fffffff";
+            string timeText = logOneLine.Substring(0, logFormat.Length);
 
             int index = logOneLine.IndexOf("INFO: ", StringComparison.InvariantCulture);
 
@@ -44,7 +45,7 @@
 
             pvpLogText = logOneLine.Substring(index + 6);
 
-            return DateTime.Parse(timeText, CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(timeText, logFormat, CultureInfo.InvariantCulture);
         }
     }
 }

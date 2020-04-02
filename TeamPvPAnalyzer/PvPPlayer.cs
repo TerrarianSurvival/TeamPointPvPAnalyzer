@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Windows.Media;
     using TeamPvPAnalyzer.Enums;
     using TeamPvPAnalyzer.Events;
 
@@ -12,6 +13,8 @@
     /// </summary>
     public class PvPPlayer : INotifyPropertyChanged
     {
+        private static readonly Random Random = new Random();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string name;
@@ -47,6 +50,11 @@
         /// クラスの名前
         /// </summary>
         public string Class { get; set; } = "none";
+
+        /// <summary>
+        /// プレイヤー固有の色
+        /// </summary>
+        public Brush IdentityColor { get; } = new SolidColorBrush(Color.FromRgb((byte)Random.Next(), (byte)Random.Next(), (byte)Random.Next()));
 
         /// <summary>
         /// チームID

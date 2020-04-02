@@ -6,7 +6,9 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows;
     using TeamPvPAnalyzer.Events;
 
     /// <summary>
@@ -31,7 +33,9 @@
                 }
                 else
                 {
-                    var newPlayer = new PvPPlayer(name);
+                    // UIスレッドで作成しないとDependecyObjectとして利用したときにエラーが出る
+                    PvPPlayer newPlayer = null;
+                    Application.Current.Dispatcher.BeginInvoke((Action)(() => { newPlayer = new PvPPlayer(name); })).Wait();
                     PlayerDict.Add(name, newPlayer);
                     newPlayer.PropertyChanged += Player_PropertyChanged;
 

@@ -49,18 +49,9 @@
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
+            MapIcon = IconUtils.CreateMapIcon(Player, spawn_source);
+
             var spawn_image = new Image
-            {
-                Source = spawn_source,
-                Stretch = Stretch.Uniform,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                Margin = new System.Windows.Thickness(2),
-                Width = 26,
-            };
-
-            MapIcon = IconUtils.CreateMapTwoImageIcon(color, Player, spawn_image);
-
-            spawn_image = new Image
             {
                 Source = spawn_source,
                 Stretch = Stretch.Uniform,

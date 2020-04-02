@@ -83,8 +83,11 @@
             this.elements.Clear();
             this.elements.AddRange(elements);
 
+            layers.Clear();
+
             LogGrid.Children.Clear();
             LogGrid.Children.Add(PlayingBar);
+            LogGrid.Children.Add(TimeLineBorder);
 
             if (this.elements.Count == 0)
             {
@@ -100,10 +103,6 @@
 
             var marginSpan = new TimeSpan((long)Math.Ceiling(TimeLineView.ViewportWidth / WidthPerSecond) * 10000000);
             LogGrid.Children.Add(CreateScale(length + marginSpan, new TimeSpan(0, 0, 1), new TimeSpan(0, 0, 10)));
-
-            int count = (int)Math.Ceiling(LogGrid.Width / 100);
-
-            LogGrid.Children.Add(TimeLineBorder);
 
             int layerHeight = 45;
 
@@ -183,7 +182,7 @@
             currentTime = startTime;
         }
 
-        protected virtual async Task PlayAsync(CancellationToken cancellationToken)
+        protected virtual async Task PlayAsync(CancellationToken cancellationToken, double speed = 1d)
         {
             IsPlaying = true;
 
@@ -192,13 +191,13 @@
             while (currentTime <= endTime)
             {
                 var now = DateTime.UtcNow;
-                var diff = now - last;
+                var diff = new TimeSpan((long)((now - last).Ticks * speed));
 
                 currentTime += diff;
 
                 await PlayingBar.Dispatcher.BeginInvoke((Action)(() => { PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0); }));
 
-                await UpdateElements().ConfigureAwait(false);
+                await UpdateElements(diff).ConfigureAwait(false);
 
                 last = now;
                 Thread.Sleep(5);
@@ -266,14 +265,14 @@
             return grid;
         }
 
-        private async Task UpdateElements()
+        private async Task UpdateElements(TimeSpan diff)
         {
             // Update elements
             foreach (var element in elements)
             {
                 // 実行順を守るため、同期的に実行する
                 // リセットをした時に確実に止める意味もある
-                element.UpdateAsync(currentTime, TimeSpan.Zero).ConfigureAwait(false);
+                element.UpdateAsync(currentTime, diff).ConfigureAwait(false);
                 if (element.RequireApperenceUpdate)
                 {
                     if (element.ShowMapIcon
@@ -282,7 +281,7 @@
                         && element.FixedEventPosition.Y >= 0)
                     {
                         visibleElements.Add(element);
-                        await App.Current.Dispatcher.BeginInvoke((Action)(() =>
+                        await mapCanvas.Dispatcher.BeginInvoke((Action)(() =>
                         {
                             Canvas.SetLeft(element.MapIcon, (element.FixedEventPosition.X * canvasWidth) - (element.MapIcon.Width / 2));
                             Canvas.SetTop(element.MapIcon, (element.FixedEventPosition.Y * canvasHeight) - element.MapIcon.Height);
@@ -295,7 +294,7 @@
                     if (visibleElements.Contains(element))
                     {
                         visibleElements.Remove(element);
-                        await App.Current.Dispatcher.BeginInvoke((Action)(() => { ((MainWindow)App.Current.MainWindow).MapCanvas.Children.Remove(element.MapIcon); }));
+                        await mapCanvas.Dispatcher.BeginInvoke((Action)(() => { mapCanvas.Children.Remove(element.MapIcon); }));
                     }
                 }
             }
@@ -303,7 +302,7 @@
             // Update elements appearance
             foreach (var visible in visibleElements)
             {
-                visible.UpdateAppearanceAsync(currentTime, TimeSpan.Zero).ConfigureAwait(false);
+                visible.UpdateAppearanceAsync(currentTime, diff).ConfigureAwait(false);
             }
         }
 
@@ -333,8 +332,22 @@
                 return;
             }
 
-            currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 1000000));
+            currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 10000000));
             PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0);
+        }
+
+        private void LogGrid_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (IsPlaying)
+            {
+                return;
+            }
+
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 10000000));
+                PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0);
+            }
         }
     }
 }

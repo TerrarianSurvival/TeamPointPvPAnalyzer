@@ -39,7 +39,7 @@
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = IconUtils.CreateMapSingleImageIcon(color, player_source);
+            MapIcon = IconUtils.CreateMapIcon(Player, teleport_source);
 
             var player_image = new Image
             {

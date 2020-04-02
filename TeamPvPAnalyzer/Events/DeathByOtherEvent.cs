@@ -48,7 +48,7 @@
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = IconUtils.CreateMapSingleImageIcon(color, death_source);
+            MapIcon = IconUtils.CreateMapIcon(Player, death_source);
 
             var player_image = new Image
             {

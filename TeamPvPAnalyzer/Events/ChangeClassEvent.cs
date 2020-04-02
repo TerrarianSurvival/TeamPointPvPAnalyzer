@@ -63,7 +63,7 @@
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = IconUtils.CreateMapSingleImageIcon(color, current_source);
+            MapIcon = IconUtils.CreateMapIcon(Player, current_source);
 
             var old_image = new Image
             {

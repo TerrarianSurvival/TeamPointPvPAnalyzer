@@ -102,6 +102,9 @@
     <Compile Include="IconUtils.cs" />
     <Compile Include="PvPPlayerStat.cs" />
     <Compile Include="Timeline\Parts\Layer.cs" />
+    <Compile Include="Timeline\Parts\MapIcon.xaml.cs">
+      <DependentUpon>MapIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Timeline\Timeline.xaml.cs">
       <DependentUpon>Timeline.xaml</DependentUpon>
     </Compile>
@@ -128,6 +131,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Timeline\Parts\MapIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Timeline\Timeline.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

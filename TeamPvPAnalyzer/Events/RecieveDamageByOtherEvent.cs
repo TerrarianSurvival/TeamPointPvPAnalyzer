@@ -56,11 +56,11 @@
         {
 
             var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
-            var death_source = IconUtils.GetImageSource("icon_shield");
+            var shield_source = IconUtils.GetImageSource("icon_shield");
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = IconUtils.CreateMapSingleImageIcon(color, death_source);
+            MapIcon = IconUtils.CreateMapIcon(Player, shield_source);
 
             var player_image = new Image
             {
@@ -73,7 +73,7 @@
 
             var death_image = new Image
             {
-                Source = death_source,
+                Source = shield_source,
                 Stretch = Stretch.Uniform,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Margin = new System.Windows.Thickness(2),

@@ -3,26 +3,26 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Shapes;
     using TeamPvPAnalyzer.Enums;
+    using TeamPvPAnalyzer.Timeline.Parts;
 
     public class IconUtils
     {
         public const double LogBaseIconWidth = 100;
 
-        private static readonly Geometry MapIcon = Geometry.Parse("M 0,0.5 A 0.5,0.5 0 0 1 1,0.5 A 0.5,0.5 0 0 1 0.85355339059,0.85355339059 C 0.7,1 0.55,1 0.5,1.2 C 0.45,1 0.3,1 0.14644660941,0.85355339059 A 0.5,0.5 0 0 1 0,0.5");
-
         private static readonly Geometry TeamIcon = Geometry.Parse("M 0.1,0 A 0.1,0.1, 0 0 0 0,0.1 V 0.7 L 0.5,1.0 L 1,0.7 V 0.1 A 0.1,0.1 0 0 0 0.9,0 Z");
 
-        private static readonly Dictionary<string, ImageSource> imageSourceDict = new Dictionary<string, ImageSource>();
+        private static readonly Dictionary<string, ImageSource> ImageSourceDict = new Dictionary<string, ImageSource>();
 
         public static ImageSource GetImageSource(string name)
         {
-            if (imageSourceDict.TryGetValue(name, out ImageSource value))
+            if (ImageSourceDict.TryGetValue(name, out ImageSource value))
             {
                 return value;
             }
@@ -30,128 +30,52 @@
             {
                 string path = string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/Resources/{0}.png", name);
                 var source = (ImageSource)new ImageSourceConverter().ConvertFromString(path);
-                imageSourceDict.Add(name, source);
+                ImageSourceDict.Add(name, source);
                 return source;
             }
         }
 
-        public static Grid CreateMapSingleImageIcon(Brush backgroundColor, ImageSource source)
+        public static MapIcon CreateMapIcon(PvPPlayer player, ImageSource eventImageSource)
         {
-            var grid = new Grid();
-
-            var shape = new Path
+            if (player == null)
             {
-                Data = MapIcon,
-                Stretch = Stretch.Uniform,
-                Fill = backgroundColor,
-                // Stroke = new SolidColorBrush(Color.FromRgb((byte)(backgroundColor.Color.R / 2), (byte)(backgroundColor.Color.G / 2), (byte)(backgroundColor.Color.B / 2))),
-            };
-            grid.Children.Add(shape);
+                throw new ArgumentNullException(nameof(player));
+            }
 
-            var icon = new Image
+            var eventImage = new Image
             {
-                Source = source,
+                Source = eventImageSource,
                 Stretch = Stretch.Uniform,
-                Margin = new Thickness(5),
             };
-            grid.Children.Add(icon);
 
-            return grid;
+            return CreateMapIcon(player, eventImage);
         }
 
-        public static Grid CreateMapTwoImageIcon(Brush backgroundColor, PvPPlayer player, ImageSource classIconSource)
+        public static MapIcon CreateMapIcon(PvPPlayer player, FrameworkElement uiElement)
         {
-            var grid = new Grid();
-            var row = new RowDefinition
+            if (player == null)
             {
-                Height = new GridLength(0.4, GridUnitType.Star),
-            };
+                throw new ArgumentNullException(nameof(player));
+            }
 
-            var row2 = new RowDefinition
+            if (uiElement == null)
             {
-                Height = new GridLength(0.6, GridUnitType.Star),
-            };
+                throw new ArgumentNullException(nameof(uiElement));
+            }
 
-            grid.RowDefinitions.Add(row);
-            grid.RowDefinitions.Add(row2);
-
-            var shape = new Path
+            var playerIcon = new MapIcon
             {
-                Data = MapIcon,
-                Stretch = Stretch.Uniform,
-                Fill = backgroundColor,
-                // Stroke = new SolidColorBrush(Color.FromRgb((byte)(backgroundColor.Color.R / 2), (byte)(backgroundColor.Color.G / 2), (byte)(backgroundColor.Color.B / 2))),
+                BackgroundColor = GetTeamColor(player.Team),
+                PlayerIdentityColor = player.IdentityColor,
+                EventContent = uiElement,
             };
-            grid.Children.Add(shape);
-
-            var classIcon = new Image
+            var playerNameBinding = new Binding("Name")
             {
-                Source = classIconSource,
-                Stretch = Stretch.Uniform,
-                Margin = new Thickness(5),
+                Source = player,
             };
+            playerIcon.SetBinding(Timeline.Parts.MapIcon.PlayerNameProperty, playerNameBinding);
 
-            grid.Children.Add(classIcon);
-            Grid.SetRow(classIcon, 0);
-
-            var playerIcon = GetPlayerIcon(player);
-            grid.Children.Add(playerIcon);
-            Grid.SetRow(playerIcon, 1);
-
-            return grid;
-        }
-
-        public static Grid CreateMapTwoImageIcon(Brush backgroundColor, PvPPlayer player, UIElement actionIcon)
-        {
-            var grid = new Grid();
-            var row = new RowDefinition
-            {
-                Height = new GridLength(0.4, GridUnitType.Star),
-            };
-
-            var row2 = new RowDefinition
-            {
-                Height = new GridLength(0.6, GridUnitType.Star),
-            };
-
-            grid.RowDefinitions.Add(row);
-            grid.RowDefinitions.Add(row2);
-
-            var shape = new Path
-            {
-                Data = MapIcon,
-                Stretch = Stretch.Uniform,
-                Fill = backgroundColor,
-                // Stroke = new SolidColorBrush(Color.FromRgb((byte)(backgroundColor.Color.R / 2), (byte)(backgroundColor.Color.G / 2), (byte)(backgroundColor.Color.B / 2))),
-            };
-            grid.Children.Add(shape);
-
-            grid.Children.Add(actionIcon);
-            Grid.SetRow(actionIcon, 0);
-
-            var playerIcon = GetPlayerIcon(player);
-            grid.Children.Add(playerIcon);
-            Grid.SetRow(playerIcon, 1);
-
-            return grid;
-        }
-
-        public static Grid CreateMapThreeImageIcon(Brush backgroundColor, PvPPlayer player, UIElement actionIcon, ImageSource damageIconSource)
-        {
-            var grid = CreateMapTwoImageIcon(backgroundColor, player, actionIcon);
-
-            var damageIcon = new Image
-            {
-                Source = damageIconSource,
-                Stretch = Stretch.Uniform,
-                Margin = new Thickness(5),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom,
-            };
-            grid.Children.Add(damageIcon);
-            Grid.SetRow(damageIcon, 1);
-
-            return grid;
+            return playerIcon;
         }
 
         public static Path CreateTeamIcon(TeamID teamID)
@@ -164,18 +88,6 @@
                 Fill = backgroundColor,
                 Stroke = new SolidColorBrush(Color.FromRgb((byte)(backgroundColor.Color.R / 2), (byte)(backgroundColor.Color.G / 2), (byte)(backgroundColor.Color.B / 2))),
             };
-        }
-
-        public static Grid CreateMapTeamIcon(TeamID teamID, PvPPlayer player)
-        {
-            if (player == null)
-            {
-                return null;
-            }
-
-            var backgroundColor = GetTeamColor(teamID);
-            var teamShape = CreateTeamIcon(teamID);
-            return CreateMapTwoImageIcon(backgroundColor, player, teamShape);
         }
 
         public static Grid CreateBaseLogIcon(SolidColorBrush backgroundColor)
@@ -206,23 +118,38 @@
                 throw new ArgumentNullException(nameof(player));
             }
 
-            var rand = new Random();
             var nameBinding = new Binding("Name")
             {
                 Source = player,
             };
 
+            var heightBinding = new Binding("ActualHeight")
+            {
+                RelativeSource = RelativeSource.Self,
+            };
+
             var grid = new Grid();
+            grid.SetBinding(Grid.WidthProperty, heightBinding);
+
             var ellipse = new Ellipse()
             {
-                Fill = new SolidColorBrush(Color.FromRgb((byte)rand.Next(), (byte)rand.Next(), (byte)rand.Next())),
+                Fill = player.IdentityColor,
+                Stretch = Stretch.Uniform,
             };
+            ellipse.SetBinding(Ellipse.HeightProperty, heightBinding);
+
             grid.Children.Add(ellipse);
 
-            var nameView = new Viewbox();
-            var nameTextBlock = new TextBlock();
+            var nameView = new Viewbox()
+            {
+                Margin = new Thickness(2),
+            };
+            var nameTextBlock = new TextBlock()
+            {
+                Foreground = Brushes.White,
+            };
             nameTextBlock.SetBinding(TextBlock.TextProperty, nameBinding);
-            nameView.DataContext = nameTextBlock;
+            nameView.Child = nameTextBlock;
             grid.Children.Add(nameView);
 
             return grid;

@@ -41,7 +41,7 @@
 			</Button>
 		</DockPanel>
 		<ScrollViewer x:Name="TimeLineView" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-			<Grid x:Name="LogGrid" Margin="5,0,5,0" PreviewMouseDown="LogGrid_PreviewMouseDown">
+			<Grid x:Name="LogGrid" Margin="5,0,5,0" PreviewMouseDown="LogGrid_PreviewMouseDown" PreviewMouseMove="LogGrid_PreviewMouseMove" Background="Transparent">
 				<Grid x:Name="PlayingBar" Margin="-5,0,0,0" Width="10" HorizontalAlignment="Left" VerticalAlignment="Stretch" Panel.ZIndex="100">
 					<Border BorderThickness="1" BorderBrush="Green" HorizontalAlignment="Center"/>
 					<Path Data="M0,0 H 1 L 0.5,0.5 Z" Fill="Green" HorizontalAlignment="Center" Stretch="Uniform" Height="5" VerticalAlignment="Top"/>

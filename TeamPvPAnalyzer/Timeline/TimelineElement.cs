@@ -74,6 +74,11 @@
 
         public virtual async Task UpdateAppearanceAsync(DateTime currentTime, TimeSpan elapsed)
         {
+            await MapIcon.Dispatcher.BeginInvoke(
+                (Action)(() =>
+                {
+                    MapIcon.Opacity -= elapsed.TotalMilliseconds / 5000d;
+                }));
         }
 
         public virtual void Reset()
