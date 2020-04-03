@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
 
@@ -41,21 +42,19 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
             var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
             var death_source = IconUtils.GetImageSource("icon_death");
 
             var color = IconUtils.GetTeamColor(Player.Team);
 
-            MapIcon = IconUtils.CreateMapIcon(Player, death_source);
-
             var player_image = new Image
             {
                 Source = player_source,
                 Stretch = Stretch.Uniform,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-                Margin = new System.Windows.Thickness(2),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(2),
                 Width = 26,
             };
 
@@ -63,8 +62,8 @@
             {
                 Source = death_source,
                 Stretch = Stretch.Uniform,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                Margin = new System.Windows.Thickness(2),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(2),
                 Width = 26,
             };
 
@@ -72,7 +71,13 @@
             grid.Children.Add(player_image);
             grid.Children.Add(death_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            var death_source = IconUtils.GetImageSource("icon_death");
+            return IconUtils.CreateMapIcon(Player, death_source);
         }
     }
 }

@@ -36,7 +36,7 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override System.Windows.FrameworkElement CreateLogIcon()
         {
             var color = IconUtils.GetTeamColor(WinnerTeam);
 
@@ -62,7 +62,7 @@
             };
             grid.Children.Add(label);
 
-            LogIcon = grid;
+            return grid;
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using TeamPvPAnalyzer.Enums;
@@ -52,13 +53,11 @@
             Player.Team = OldTeam;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
             var arrow_source = IconUtils.GetImageSource("icon_arrow");
 
             var color = IconUtils.GetTeamColor(NewTeam);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, IconUtils.CreateTeamIcon(NewTeam));
 
             var new_team_icon = IconUtils.CreateTeamIcon(NewTeam);
             new_team_icon.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
@@ -84,7 +83,12 @@
             grid.Children.Add(arrow_image);
             grid.Children.Add(new_team_icon);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            return IconUtils.CreateMapIcon(Player, IconUtils.CreateTeamIcon(NewTeam));
         }
     }
 }

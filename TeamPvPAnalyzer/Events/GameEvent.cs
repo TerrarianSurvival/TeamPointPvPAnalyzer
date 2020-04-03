@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using TeamPvPAnalyzer.Enums;
@@ -37,9 +38,9 @@
         /// </summary>
         public string LogInfoText { get; protected set; }
 
-        public System.Windows.FrameworkElement LogIcon { get; protected set; }
+        public FrameworkElement LogIcon { get; }
 
-        public System.Windows.FrameworkElement MapIcon { get; protected set; }
+        public FrameworkElement MapIcon { get; }
 
         /// <summary>
         /// ログに記録されたデータから情報を復元する
@@ -51,7 +52,7 @@
             throw new NotImplementedException();
         }
 
-        public virtual void CreateIcons()
+        public virtual FrameworkElement CreateLogIcon()
         {
             var grid = IconUtils.CreateBaseLogIcon(Brushes.Black);
 
@@ -59,12 +60,17 @@
             {
                 Content = Type.ToString(),
                 Foreground = Brushes.White,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
             };
             grid.Children.Add(label);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public virtual FrameworkElement CreateMapIcon()
+        {
+            throw new NotImplementedException();
         }
     }
 }

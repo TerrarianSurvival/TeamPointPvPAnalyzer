@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -32,14 +33,12 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
             var player_source = IconUtils.GetImageSource(Player.Class);
             var teleport_source = IconUtils.GetImageSource("icon_teleport");
 
             var color = IconUtils.GetTeamColor(Player.Team);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, teleport_source);
 
             var player_image = new Image
             {
@@ -63,7 +62,13 @@
             grid.Children.Add(player_image);
             grid.Children.Add(teleport_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            var teleport_source = IconUtils.GetImageSource("icon_teleport");
+            return IconUtils.CreateMapIcon(Player, teleport_source);
         }
     }
 }

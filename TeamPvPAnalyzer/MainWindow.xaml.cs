@@ -165,8 +165,6 @@
                 {
                     preGameStartEvents.Add(@event);
                 }
-
-                @event.CreateIcons();
             }
 
             GameSelectBox.ItemsSource = games;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using TeamPvPAnalyzer.Enums;
@@ -52,15 +53,12 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
-
             var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
             var shield_source = IconUtils.GetImageSource("icon_shield");
 
             var color = IconUtils.GetTeamColor(Player.Team);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, shield_source);
 
             var player_image = new Image
             {
@@ -84,7 +82,13 @@
             grid.Children.Add(player_image);
             grid.Children.Add(death_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            var shield_source = IconUtils.GetImageSource("icon_shield");
+            return IconUtils.CreateMapIcon(Player, shield_source);
         }
     }
 }

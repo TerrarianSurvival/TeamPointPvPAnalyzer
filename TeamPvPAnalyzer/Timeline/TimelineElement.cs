@@ -12,6 +12,11 @@
 
         public TimelineElement(ILogEvent logEvent, Point? fixedPoint = null, bool showMapIcon = true)
         {
+            if (logEvent == null)
+            {
+                throw new ArgumentNullException(nameof(logEvent));
+            }
+
             if (fixedPoint.HasValue)
             {
                 fixedEventPos = fixedPoint.Value;
@@ -20,14 +25,15 @@
             Time = logEvent.Time;
             Event = logEvent;
 
-            if (logEvent.LogIcon == null)
-            {
-                logEvent.CreateIcons();
-            }
-
             TimelineIcon = logEvent.LogIcon;
-            MapIcon = logEvent.MapIcon;
+            try
+            {
+                MapIcon = logEvent.MapIcon;
+            }
+            catch (Exception e)
+            {
 
+            }
             if (MapIcon == null)
             {
                 ShowMapIcon = false;

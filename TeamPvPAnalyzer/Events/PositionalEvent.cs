@@ -1,6 +1,7 @@
 ﻿namespace TeamPvPAnalyzer.Events
 {
     using System;
+    using System.Windows;
     using TeamPvPAnalyzer.Enums;
 
     /// <summary>
@@ -8,6 +9,9 @@
     /// </summary>
     public class PositionalEvent : ILogEvent
     {
+        private FrameworkElement mapIcon;
+        private FrameworkElement logIcon;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -44,9 +48,31 @@
         /// </summary>
         public string LogInfoText { get; protected set; }
 
-        public System.Windows.FrameworkElement LogIcon { get; protected set; }
+        public FrameworkElement LogIcon
+        {
+            get
+            {
+                if (logIcon == null)
+                {
+                    logIcon = CreateLogIcon();
+                }
 
-        public System.Windows.FrameworkElement MapIcon { get; protected set; }
+                return logIcon;
+            }
+        }
+
+        public FrameworkElement MapIcon
+        {
+            get
+            {
+                if (mapIcon == null)
+                {
+                    mapIcon = CreateMapIcon();
+                }
+
+                return mapIcon;
+            }
+        }
 
         /// <summary>
         /// ログに記録されたデータから情報を復元する
@@ -58,7 +84,12 @@
             throw new NotImplementedException();
         }
 
-        public virtual void CreateIcons()
+        public virtual FrameworkElement CreateLogIcon()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual FrameworkElement CreateMapIcon()
         {
             throw new NotImplementedException();
         }

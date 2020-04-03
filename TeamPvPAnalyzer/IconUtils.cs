@@ -20,6 +20,8 @@
 
         private static readonly Dictionary<string, ImageSource> ImageSourceDict = new Dictionary<string, ImageSource>();
 
+        private static readonly ImageSourceConverter ImageSourceConverter = new ImageSourceConverter();
+
         public static ImageSource GetImageSource(string name)
         {
             if (ImageSourceDict.TryGetValue(name, out ImageSource value))
@@ -28,8 +30,8 @@
             }
             else
             {
-                string path = string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/Resources/{0}.png", name);
-                var source = (ImageSource)new ImageSourceConverter().ConvertFromString(path);
+                string path = string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/Images/{0}.png", name);
+                var source = (ImageSource)ImageSourceConverter.ConvertFromString(path);
                 ImageSourceDict.Add(name, source);
                 return source;
             }

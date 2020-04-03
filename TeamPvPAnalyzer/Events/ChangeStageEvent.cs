@@ -47,7 +47,7 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override System.Windows.FrameworkElement CreateLogIcon()
         {
             var grid = IconUtils.CreateBaseLogIcon(Brushes.Black);
 
@@ -60,7 +60,7 @@
             };
             grid.Children.Add(label);
 
-            LogIcon = grid;
+            return grid;
         }
     }
 }

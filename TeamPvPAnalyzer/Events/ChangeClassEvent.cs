@@ -55,15 +55,13 @@
             Player.Class = OldClass;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
             var current_source = IconUtils.GetImageSource(CurrentClass.ToLowerInvariant());
             var old_source = IconUtils.GetImageSource(OldClass.ToLowerInvariant());
             var arrow_source = IconUtils.GetImageSource("icon_arrow");
 
             var color = IconUtils.GetTeamColor(Player.Team);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, current_source);
 
             var old_image = new Image
             {
@@ -97,7 +95,13 @@
             grid.Children.Add(arrow_image);
             grid.Children.Add(old_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            var current_source = IconUtils.GetImageSource(CurrentClass.ToLowerInvariant());
+            return IconUtils.CreateMapIcon(Player, current_source);
         }
     }
 }

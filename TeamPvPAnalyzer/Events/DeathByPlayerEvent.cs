@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
 
@@ -59,15 +60,13 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override FrameworkElement CreateLogIcon()
         {
             var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
             var killer_source = IconUtils.GetImageSource(KillerPlayer.Class.ToLowerInvariant());
             var death_source = IconUtils.GetImageSource("icon_death");
 
             var color = IconUtils.GetTeamColor(Player.Team);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, death_source);
 
             var player_image = new Image
             {
@@ -101,7 +100,13 @@
             grid.Children.Add(death_image);
             grid.Children.Add(killer_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override FrameworkElement CreateMapIcon()
+        {
+            var death_source = IconUtils.GetImageSource("icon_death");
+            return IconUtils.CreateMapIcon(Player, death_source);
         }
     }
 }

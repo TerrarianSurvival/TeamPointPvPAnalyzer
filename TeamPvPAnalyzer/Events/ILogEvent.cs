@@ -6,7 +6,7 @@ namespace TeamPvPAnalyzer.Events
     /// ログから変換可能なイベントのインターフェース
     /// </summary>
     public interface ILogEvent
-    {
+    { 
         /// <summary>
         /// イベントが記録された時間
         /// </summary>
@@ -33,6 +33,8 @@ namespace TeamPvPAnalyzer.Events
         /// <returns>イベント(this)</returns>
         ILogEvent ParseFromArguments(string[] args);
 
-        void CreateIcons();
+        FrameworkElement CreateLogIcon();
+
+        FrameworkElement CreateMapIcon();
     }
 }

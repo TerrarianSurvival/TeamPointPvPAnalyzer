@@ -15,15 +15,13 @@
         {
         }
 
-        public override void CreateIcons()
+        public override System.Windows.FrameworkElement CreateLogIcon()
         {
             var player_source = IconUtils.GetImageSource(Player.Class.ToLowerInvariant());
             var victim_source = IconUtils.GetImageSource(VictimPlayer.Class.ToLowerInvariant());
             var sword_source = IconUtils.GetImageSource("icon_sword");
 
             var color = IconUtils.GetTeamColor(Player.Team);
-
-            MapIcon = IconUtils.CreateMapIcon(Player, sword_source);
 
             var player_image = new Image
             {
@@ -57,7 +55,13 @@
             grid.Children.Add(sword_image);
             grid.Children.Add(victim_image);
 
-            LogIcon = grid;
+            return grid;
+        }
+
+        public override System.Windows.FrameworkElement CreateMapIcon()
+        {
+            var sword_source = IconUtils.GetImageSource("icon_sword");
+            return IconUtils.CreateMapIcon(Player, sword_source);
         }
     }
 }

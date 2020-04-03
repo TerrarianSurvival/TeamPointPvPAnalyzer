@@ -9,7 +9,7 @@
     /// <summary>
     /// ポイント取得イベント
     /// </summary>
-    public class GetPointEvent : PositionalEvent
+    public class GetPointEvent : GameEvent
     {
         /// <summary>
         /// コンストラクタ
@@ -43,9 +43,8 @@
         public override ILogEvent ParseFromArguments(string[] args)
         {
             // int who = int.Parse(args[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            EventPosX = int.Parse(args[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
-            EventPosY = int.Parse(args[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
-
+            // EventPosX = int.Parse(args[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
+            // EventPosY = int.Parse(args[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
             string text = args[3];
             string colorCode = text.Substring(text.IndexOf('/') + 1, 6);
 
@@ -67,7 +66,7 @@
             return this;
         }
 
-        public override void CreateIcons()
+        public override System.Windows.FrameworkElement CreateLogIcon()
         {
             var color = IconUtils.GetTeamColor(Team);
 
@@ -93,7 +92,7 @@
             };
             grid.Children.Add(label);
 
-            LogIcon = grid;
+            return grid;
         }
     }
 }
