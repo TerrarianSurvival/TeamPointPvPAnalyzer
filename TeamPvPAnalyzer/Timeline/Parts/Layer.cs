@@ -20,7 +20,7 @@
                 throw new ArgumentNullException(nameof(element));
             }
 
-            var duration = new TimeSpan(0, 0, Timeline.LogElementPassTime);
+            var duration = new TimeSpan(0, 0, TimelineControl.LogElementPassTime);
             var end = element.Time + duration;
             foreach (var tuple in allocatedTimes)
             {

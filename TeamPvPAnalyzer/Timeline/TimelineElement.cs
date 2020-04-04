@@ -66,9 +66,9 @@
             }
         }
 
-        public virtual async Task UpdateAsync(DateTime currentTime, TimeSpan elapsed)
+        public virtual async Task UpdateAsync(DateTime currentTime)
         {
-            if (currentTime >= Time && currentTime <= Time + new TimeSpan(0, 0, Timeline.LogElementPassTime))
+            if (currentTime >= Time && currentTime <= Time + new TimeSpan(0, 0, TimelineControl.LogElementPassTime))
             {
                 RequireApperenceUpdate = true;
             }
@@ -78,12 +78,12 @@
             }
         }
 
-        public virtual async Task UpdateAppearanceAsync(DateTime currentTime, TimeSpan elapsed)
+        public virtual async Task UpdateAppearanceAsync(DateTime currentTime)
         {
             await MapIcon.Dispatcher.BeginInvoke(
                 (Action)(() =>
                 {
-                    MapIcon.Opacity -= elapsed.TotalMilliseconds / 5000d;
+                    MapIcon.Opacity = 1d - ((currentTime - Time).TotalMilliseconds / 5000d);
                 }));
         }
 

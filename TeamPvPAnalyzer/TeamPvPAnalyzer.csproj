@@ -33,6 +33,11 @@
     <None Remove="Images\standard.png" />
     <None Remove="Images\summon.png" />
     <None Remove="Images\wizard.png" />
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>

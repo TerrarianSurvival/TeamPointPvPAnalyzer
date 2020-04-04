@@ -12,6 +12,8 @@
     /// </summary>
     public class GameEvent : ILogEvent
     {
+        private FrameworkElement logIcon;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -38,7 +40,18 @@
         /// </summary>
         public string LogInfoText { get; protected set; }
 
-        public FrameworkElement LogIcon { get; }
+        public FrameworkElement LogIcon
+        {
+            get
+            {
+                if (logIcon == null)
+                {
+                    logIcon = CreateLogIcon();
+                }
+
+                return logIcon;
+            }
+        }
 
         public FrameworkElement MapIcon { get; }
 
