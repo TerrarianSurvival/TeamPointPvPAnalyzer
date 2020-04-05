@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Images\Analyzer.ico" />
     <None Remove="Images\creeper.png" />
     <None Remove="Images\desert.png" />
     <None Remove="Images\Espeon.png" />
@@ -57,6 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Analyzer.ico" />
     <Resource Include="Images\creeper.png" />
     <Resource Include="Images\desert.png" />
     <Resource Include="Images\Espeon.png" />

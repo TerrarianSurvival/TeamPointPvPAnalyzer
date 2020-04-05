@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:timeline="clr-namespace:TeamPvPAnalyzer.Timeline"
         mc:Ignorable="d"
+		Icon="pack://application:,,,/Images/Analyzer.ico"
         Title="PvP Log Analyzer"
 		Height="800" Width="1600"
 		Closed="Window_Closed">
