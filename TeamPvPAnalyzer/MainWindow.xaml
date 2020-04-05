@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="PvP Log Analyzer"
 		Height="800" Width="1600"
-		Initialized="Window_Initialized"
 		Closed="Window_Closed">
 	<Grid x:Name="MainGrid" AllowDrop="True" PreviewDragOver="Log_DragOver" PreviewDrop="Log_Drop" Background="Transparent">
 		<Grid.ColumnDefinitions>
@@ -20,7 +19,7 @@
 			<RowDefinition Height="400"/>
 		</Grid.RowDefinitions>
 
-		<Grid Panel.ZIndex="1" x:Name="FileDropOverlay" Background="#88FFFFFF" Grid.RowSpan="3" Grid.ColumnSpan="2" PreviewDragLeave="Grid_PreviewDragLeave" Visibility="Hidden">
+		<Grid Panel.ZIndex="1" x:Name="FileDropOverlay" Background="#88FFFFFF" Grid.RowSpan="3" Grid.ColumnSpan="2" PreviewDrop="Log_Drop" PreviewDragLeave="Grid_PreviewDragLeave" Visibility="Hidden">
 			<DockPanel Height="100" LastChildFill="False" HorizontalAlignment="Center">
 				<Grid Width="100" Height="100" Margin="0,0,20,0">
 					<Path Stretch="Uniform" Stroke="Black" Fill="Black" StrokeThickness="4">
@@ -73,7 +72,7 @@
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
-							<TextBlock Text="{Binding Key}"></TextBlock>
+							<TextBlock Text="{Binding Key}"/>
 						</StackPanel>
 					</DataTemplate>
 				</ComboBox.ItemTemplate>

@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using TeamPvPAnalyzer.Events;
-using TeamPvPAnalyzer.Timeline;
-
-namespace TeamPvPAnalyzer
+﻿namespace TeamPvPAnalyzer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using TeamPvPAnalyzer.Events;
+    using TeamPvPAnalyzer.Timeline;
+
     /// <summary>
     /// Interaction logic for PlayerWindow.xaml
     /// </summary>
@@ -35,13 +28,13 @@ namespace TeamPvPAnalyzer
             ["Spawn"] = x => { return x.SpawnCount.ToString(CultureInfo.InvariantCulture); },
         };
 
+        private readonly TimelineControl timelineControl;
+
         private List<ILogEvent> logAllEvents;
         private List<ILogEvent> filteredEvents = new List<ILogEvent>();
         private Dictionary<PvPPlayer, bool> playerFilters = new Dictionary<PvPPlayer, bool>();
 
         private bool aggregateApply = false;
-
-        private readonly TimelineControl timelineControl;
 
         public PlayerWindow()
         {
@@ -145,6 +138,29 @@ namespace TeamPvPAnalyzer
                 BlueTeamStat.ItemsSource = blueStat;
                 YellowTeamStat.ItemsSource = yellowStat;
 
+                BlueTeamStat.UpdateLayout();
+                YellowTeamStat.UpdateLayout();
+
+                aggregateApply = true;
+                BlueTeamCheckAll.IsChecked = true;
+                foreach (var item in BlueTeamStat.Items)
+                {
+                    if (BlueTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        FindVisualChild<CheckBox>(element).IsChecked = true;
+                    }
+                }
+
+                YellowTeamCheckAll.IsChecked = true;
+                foreach (var item in YellowTeamStat.Items)
+                {
+                    if (YellowTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
+                    {
+                        FindVisualChild<CheckBox>(element).IsChecked = true;
+                    }
+                }
+
+                aggregateApply = false;
                 ApplyFilters();
                 SetEventsToTimeline();
             }
@@ -185,7 +201,7 @@ namespace TeamPvPAnalyzer
                 {
                     if (BlueTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
                     {
-                        element.IsSelected = true;
+                        FindVisualChild<CheckBox>(element).IsChecked = true;
                     }
                 }
             }
@@ -195,21 +211,14 @@ namespace TeamPvPAnalyzer
                 {
                     if (BlueTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
                     {
-                        element.IsSelected = false;
+                        FindVisualChild<CheckBox>(element).IsChecked = false;
                     }
                 }
             }
 
             aggregateApply = false;
             ApplyFilters();
-            try
-            {
-                await SetEventsToTimeline().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            await SetEventsToTimeline().ConfigureAwait(false);
         }
 
         private async void YellowTeamCheckAll_Clicked(object sender, RoutedEventArgs e)
@@ -222,7 +231,7 @@ namespace TeamPvPAnalyzer
                 {
                     if (YellowTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
                     {
-                        element.IsSelected = true;
+                        FindVisualChild<CheckBox>(element).IsChecked = true;
                     }
                 }
             }
@@ -232,7 +241,7 @@ namespace TeamPvPAnalyzer
                 {
                     if (YellowTeamStat.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem element)
                     {
-                        element.IsSelected = false;
+                        FindVisualChild<CheckBox>(element).IsChecked = false;
                     }
                 }
             }
@@ -314,18 +323,13 @@ namespace TeamPvPAnalyzer
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var items = StatFunctions.Keys;
-
-            BlueTeamStatComboBox.ItemsSource = items;
-            YellowTeamStatComboBox.ItemsSource = items;
-        }
-
         private void BlueTeamStatCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is CheckBox box && box.Parent is DockPanel panel && BlueTeamStat.ItemsSource != null)
+            if (sender is CheckBox box
+               && box.Parent is DockPanel panel
+               && BlueTeamStat.ItemsSource != null)
             {
+                e.Handled = true;
                 foreach (var child in panel.Children)
                 {
                     if (child is TextBlock text)
@@ -348,6 +352,8 @@ namespace TeamPvPAnalyzer
                                 }
                             }
                         }
+
+                        break;
                     }
                 }
             }
@@ -355,8 +361,11 @@ namespace TeamPvPAnalyzer
 
         private void YellowTeamStatCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is CheckBox box && box.Parent is DockPanel panel && YellowTeamStat.ItemsSource != null)
+            if (sender is CheckBox box
+                && box.Parent is DockPanel panel
+                && YellowTeamStat.ItemsSource != null)
             {
+                e.Handled = true;
                 foreach (var child in panel.Children)
                 {
                     if (child is TextBlock text)
@@ -379,6 +388,8 @@ namespace TeamPvPAnalyzer
                                 }
                             }
                         }
+
+                        break;
                     }
                 }
             }
@@ -387,6 +398,54 @@ namespace TeamPvPAnalyzer
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             MainWindow.GameSelectBox.SelectionChanged -= GameSelectBox_SelectionChanged;
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                {
+                    return (childItem)child;
+                }
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            BlueTeamStatComboBox.ItemsSource = StatFunctions;
+            YellowTeamStatComboBox.ItemsSource = StatFunctions;
+        }
+
+        private void BlueStatPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is DockPanel panel
+                && panel.Children[0] is CheckBox box)
+            {
+                box.IsChecked = box.IsChecked != true;
+                BlueTeamStatCheckBox_Click(box, e);
+            }
+        }
+
+        private void YellowStatPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is DockPanel panel
+                && panel.Children[0] is CheckBox box)
+            {
+                box.IsChecked = box.IsChecked != true;
+                YellowTeamStatCheckBox_Click(box, e);
+            }
         }
     }
 }

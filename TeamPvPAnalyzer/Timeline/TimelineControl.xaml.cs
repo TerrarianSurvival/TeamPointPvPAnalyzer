@@ -7,6 +7,7 @@ namespace TeamPvPAnalyzer.Timeline
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -20,11 +21,14 @@ namespace TeamPvPAnalyzer.Timeline
     /// </summary>
     public partial class TimelineControl : UserControl, IDisposable
     {
-        public const int LogElementPassTime = 5;
+        public const int LogElementPassSecond = 5;
 
         private const int LogElementWidth = 100;
         private const int HeaderHeight = 25;
-        private const int WidthPerSecond = LogElementWidth / LogElementPassTime;
+        private const int WidthPerSecond = LogElementWidth / LogElementPassSecond;
+
+        private const int CancelWaitMS = 50;
+        private const int WaitMS = 5;
 
         private readonly List<TimelineElement> elements = new List<TimelineElement>();
         private readonly List<TimelineElement> visibleElements = new List<TimelineElement>();
@@ -47,6 +51,19 @@ namespace TeamPvPAnalyzer.Timeline
         public TimelineControl()
         {
             InitializeComponent();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            if (IsPlaying)
+            {
+                continueWithPlay = true;
+                Pause();
+            }
+            else
+            {
+                Trace.WriteLine("Not IsPlaying");
+            }
         }
 
         public DateTime CurrentTime
@@ -81,10 +98,16 @@ namespace TeamPvPAnalyzer.Timeline
             {
                 cancellationTokenSource.Cancel();
 
-                // キャンセルされるまで待機
+                // キャンセルされるかCancelWaitMSまで待機
+                int waited = 0;
                 while (IsPlaying)
                 {
-                    Task.Delay(5).Wait();
+                    Task.Delay(WaitMS).Wait();
+                    waited += WaitMS;
+                    if (waited >= CancelWaitMS)
+                    {
+                        break;
+                    }
                 }
 
                 playRequested = true;
@@ -191,10 +214,16 @@ namespace TeamPvPAnalyzer.Timeline
             {
                 cancellationTokenSource.Cancel();
 
-                // キャンセルされるまで待機
+                // キャンセルされるかCancelWaitMSまで待機
+                int waited = 0;
                 while (IsPlaying)
                 {
-                    Task.Delay(5).Wait();
+                    Task.Delay(WaitMS).Wait();
+                    waited += WaitMS;
+                    if (waited >= CancelWaitMS)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -236,10 +265,16 @@ namespace TeamPvPAnalyzer.Timeline
             {
                 cancellationTokenSource.Cancel();
 
-                // キャンセルされるまで待機
+                // キャンセルされるかCancelWaitMSまで待機
+                int waited = 0;
                 while (IsPlaying)
                 {
-                    Task.Delay(5).Wait();
+                    Task.Delay(WaitMS).Wait();
+                    waited += WaitMS;
+                    if (waited >= CancelWaitMS)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -273,7 +308,6 @@ namespace TeamPvPAnalyzer.Timeline
                 currentTime += diff;
 
                 await PlayingBar.Dispatcher.BeginInvoke((Action)(() => { PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0); }));
-
                 await UpdateElements().ConfigureAwait(false);
 
                 last = now;
@@ -413,12 +447,20 @@ namespace TeamPvPAnalyzer.Timeline
         {
             if (IsPlaying)
             {
+                e.Handled = true;
+
                 cancellationTokenSource.Cancel();
 
-                // キャンセルされるまで待機
+                // キャンセルされるかCancelWaitMSまで待機
+                int waited = 0;
                 while (IsPlaying)
                 {
-                    Task.Delay(5).Wait();
+                    Task.Delay(WaitMS).Wait();
+                    waited += WaitMS;
+                    if (waited >= CancelWaitMS)
+                    {
+                        break;
+                    }
                 }
 
                 continueWithPlay = true;
@@ -428,6 +470,8 @@ namespace TeamPvPAnalyzer.Timeline
             {
                 return;
             }
+
+            e.Handled = true;
 
             playingBarMoving = true;
             currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 10000000));
@@ -452,6 +496,8 @@ namespace TeamPvPAnalyzer.Timeline
                     return;
                 }
 
+                e.Handled = true;
+
                 currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 10000000));
                 PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0);
 
@@ -472,6 +518,8 @@ namespace TeamPvPAnalyzer.Timeline
             {
                 return;
             }
+
+            e.Handled = true;
 
             currentTime = startTime + new TimeSpan((long)Math.Ceiling(e.GetPosition(LogGrid).X / WidthPerSecond * 10000000));
             PlayingBar.Margin = new Thickness((currentTime - startTime).TotalMilliseconds * WidthPerSecond / 1000d, 0, 0, 0);
@@ -509,6 +557,18 @@ namespace TeamPvPAnalyzer.Timeline
             }
 
             disposed = true;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.Deactivated += Window_Deactivated;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.Deactivated -= Window_Deactivated;
         }
     }
 }

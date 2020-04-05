@@ -68,7 +68,7 @@
 
         public virtual async Task UpdateAsync(DateTime currentTime)
         {
-            if (currentTime >= Time && currentTime <= Time + new TimeSpan(0, 0, TimelineControl.LogElementPassTime))
+            if (currentTime >= Time && currentTime <= Time + new TimeSpan(0, 0, TimelineControl.LogElementPassSecond))
             {
                 RequireApperenceUpdate = true;
             }

@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="PlayerWindow"
 		Height="450" Width="1200"
+		Initialized="Window_Initialized"
 		Unloaded="Window_Unloaded">
     <Grid>
 		<Grid.ColumnDefinitions>
@@ -31,15 +32,14 @@
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<DockPanel LastChildFill="True" VerticalAlignment="Center" Margin="5">
-						<CheckBox x:Name="BlueTeamCheckAll" Click="BlueTeamCheckAll_Clicked" VerticalContentAlignment="Center"/>
-						<TextBlock>Check All</TextBlock>
+						<CheckBox x:Name="BlueTeamCheckAll" Click="BlueTeamCheckAll_Clicked" VerticalContentAlignment="Center" Content="Check All"/>
 					</DockPanel>
-					<ComboBox x:Name="BlueTeamStatComboBox" Grid.Column="1" Margin="5">
+					<ComboBox x:Name="BlueTeamStatComboBox" Grid.Column="1" Margin="5" HorizontalContentAlignment="Stretch">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
-								<DockPanel LastChildFill="True">
+								<DockPanel LastChildFill="True" MouseDown="BlueStatPanel_MouseDown" Background="Transparent">
 									<CheckBox Click="BlueTeamStatCheckBox_Click" Width="20"/>
-									<TextBlock Text="{Binding}"/>
+									<TextBlock Text="{Binding Key}"/>
 								</DockPanel>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
@@ -55,15 +55,14 @@
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<DockPanel LastChildFill="True" VerticalAlignment="Center" Margin="5">
-						<CheckBox x:Name="YellowTeamCheckAll" Click="YellowTeamCheckAll_Clicked" VerticalContentAlignment="Center"/>
-						<TextBlock>Check All</TextBlock>
+						<CheckBox x:Name="YellowTeamCheckAll" Click="YellowTeamCheckAll_Clicked" VerticalContentAlignment="Center" Content="Check All"/>
 					</DockPanel>
-					<ComboBox x:Name="YellowTeamStatComboBox" Grid.Column="1" Margin="5">
+					<ComboBox x:Name="YellowTeamStatComboBox" Grid.Column="1" Margin="5" HorizontalContentAlignment="Stretch">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
-								<DockPanel LastChildFill="True">
+								<DockPanel LastChildFill="True" MouseDown="YellowStatPanel_MouseDown" Background="Transparent">
 									<CheckBox Click="YellowTeamStatCheckBox_Click" Width="20"/>
-									<TextBlock Text="{Binding}"/>
+									<TextBlock Text="{Binding Key}"/>
 								</DockPanel>
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
@@ -80,13 +79,15 @@
 								<ColumnDefinition/>
 							</Grid.ColumnDefinitions>
 							<StackPanel>
-								<StackPanel Height="30" Orientation="Horizontal">
-									<CheckBox VerticalAlignment="Center" Margin="3" Checked="Player_Checked" Unchecked="Player_Unchecked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/>
-									<TextBlock Text="{Binding Player.Name}" Margin="3" TextAlignment="Center" VerticalAlignment="Center"/>
-								</StackPanel>
+								<CheckBox Height="30"
+									VerticalAlignment="Center"
+									Margin="3"
+									Checked="Player_Checked"
+									Unchecked="Player_Unchecked"
+									Content="{Binding Player.Name}"/>
 								<Image Source="{Binding IconSource}" Stretch="Uniform" Width="30" Height="30"/>
 							</StackPanel>
-							<ListView Grid.Column="1" Margin="5,0" ItemsSource="{Binding StatList}"  HorizontalContentAlignment="Stretch">
+							<ListView Grid.Column="1" Margin="5,0" ItemsSource="{Binding StatList}" HorizontalContentAlignment="Stretch">
 								<ListView.ItemTemplate>
 									<DataTemplate>
 										<DockPanel LastChildFill="True">
@@ -124,10 +125,12 @@
 								<ColumnDefinition/>
 							</Grid.ColumnDefinitions>
 							<StackPanel>
-								<StackPanel Height="30" Orientation="Horizontal">
-									<CheckBox VerticalAlignment="Center" Margin="3" Checked="Player_Checked" Unchecked="Player_Unchecked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"></CheckBox>
-									<TextBlock Text="{Binding Player.Name}" Margin="3" TextAlignment="Center" VerticalAlignment="Center"/>
-								</StackPanel>
+								<CheckBox Height="30"
+									VerticalAlignment="Center"
+									Margin="3"
+									Checked="Player_Checked"
+									Unchecked="Player_Unchecked"
+									Content="{Binding Player.Name}"/>
 								<Image Source="{Binding IconSource}" Stretch="Uniform" Width="30" Height="30"></Image>
 							</StackPanel>
 							<ListView Grid.Column="1" Margin="5,0" ItemsSource="{Binding StatList}" HorizontalContentAlignment="Stretch">

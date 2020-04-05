@@ -39,6 +39,8 @@
 
         private void Log_Drop(object sender, DragEventArgs e)
         {
+            e.Handled = true;
+
             string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             string filePath = fileList[0];
             if (filePath.EndsWith(".log", StringComparison.InvariantCultureIgnoreCase))
@@ -46,6 +48,16 @@
                 if (File.Exists(filePath))
                 {
                     FileDropOverlay.Visibility = Visibility.Hidden;
+
+                    if (playerWindow == null)
+                    {
+                        playerWindow = new PlayerWindow();
+                        playerWindow.Show();
+                    }
+                    else
+                    {
+                        playerWindow.Activate();
+                    }
 
                     // UIスレッドでContinueWith
                     LogParser.Parse(filePath).ContinueWith(task => CreateGames(task.Result), TaskScheduler.FromCurrentSynchronizationContext());
@@ -56,8 +68,6 @@
         private void Log_DragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
-
-            Trace.WriteLine("DragOver");
 
             FileDropOverlay.Visibility = Visibility.Visible;
         }
@@ -403,12 +413,6 @@
             {
                 playerWindow.Activate();
             }
-        }
-
-        private void Window_Initialized(object sender, EventArgs e)
-        {
-            playerWindow = new PlayerWindow();
-            playerWindow.Show();
         }
 
         private void Window_Closed(object sender, EventArgs e)
